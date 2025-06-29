@@ -20,8 +20,14 @@ class BooksParseSpider(scrapy.Spider):
             "h1::text").get()
         item["price"] = response.css(
             ".price_color::text").get()
-        item["category"] = response.css(
-            "ul.breadcrumb li:nth-child(3) a::text").get().strip()
+
+        category_raw = response.css(
+            "ul.breadcrumb li:nth-child(3) a::text").get()
+        if category_raw:
+            item["category"] = category_raw.strip()
+        else:
+            item["category"] = None
+
         item["description"] = response.css(
             "#product_description + p::text").get()
 
